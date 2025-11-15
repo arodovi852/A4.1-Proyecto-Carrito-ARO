@@ -1,114 +1,61 @@
-// Variables
-const carrito = document.querySelector('#carrito');
-const contenedorCarrito = document.querySelector('#lista-carrito tbody');
-const vaciarCarritoBtn = document.querySelector('#vaciar-carrito');
-const listaCursos = document.querySelector('#lista-cursos');
-let articulosCarrito = [];
 
-// Listeners
-cargarEventListeners();
+const form = document.getElementById("form-mensaje");
+const input = document.getElementById("input-mensaje");
+const lista = document.getElementById("lista-mensajes");
 
-function cargarEventListeners() {
-    // Agregar curso al carrito
-    listaCursos.addEventListener('click', agregarCurso);
+let mensajes = [];
 
-    // Eliminar curso del carrito
-    carrito.addEventListener('click', eliminarCurso);
+document.addEventListener("DOMContentLoaded", () => {
+    const guardados = localStorage.getItem("mensajes");
 
-    // Vaciar carrito
-    vaciarCarritoBtn.addEventListener('click', () => {
-        articulosCarrito = [];
-        limpiarHTML();
-        sincronizarStorage();
-    });
+    if (guardados) {
+        mensajes = JSON.parse(guardados);
+        mostrarMensajes();
+    }
+});
 
-    // Cargar los datos del storage al iniciar la página
-    document.addEventListener('DOMContentLoaded', () => {
-        articulosCarrito = JSON.parse(localStorage.getItem('carrito')) || [];
-        carritoHTML();
-    });
-}
-
-// Funciones
-function agregarCurso(e) {
+form.addEventListener("submit", (e) => {
     e.preventDefault();
 
-    if (e.target.classList.contains('agregar-carrito')) {
-        const cursoSeleccionado = e.target.parentElement.parentElement;
-        leerDatosCurso(cursoSeleccionado);
-    }
-}
+    const texto = input.value.trim();
+    if (texto === "") return;
 
-// Elimina un curso del carrito
-function eliminarCurso(e) {
-    if (e.target.classList.contains('borrar-curso')) {
-        const cursoId = e.target.getAttribute('data-id');
-        articulosCarrito = articulosCarrito.filter(curso => curso.id !== cursoId);
-        carritoHTML();
-        sincronizarStorage();
-    }
-}
-
-// Lee los datos del curso seleccionado
-function leerDatosCurso(curso) {
-    const infoCurso = {
-        imagen: curso.querySelector('img').src,
-        titulo: curso.querySelector('h4').textContent,
-        precio: curso.querySelector('.precio span').textContent,
-        id: curso.querySelector('a').getAttribute('data-id'),
-        cantidad: 1
+    const mensaje = {
+        id: Date.now(),
+        texto: texto
     };
 
-    // Comprobar si el curso ya existe en el carrito
-    const existe = articulosCarrito.some(curso => curso.id === infoCurso.id);
-    if (existe) {
-        // Aumentar cantidad
-        const cursos = articulosCarrito.map(curso => {
-            if (curso.id === infoCurso.id) {
-                curso.cantidad++;
-                return curso; // objeto actualizado
-            } else {
-                return curso; // los demás iguales
-            }
-        });
-        articulosCarrito = [...cursos];
-    } else {
-        // Agregar nuevo curso
-        articulosCarrito = [...articulosCarrito, infoCurso];
-    }
+    mensajes.push(mensaje);
+    guardar();
+    mostrarMensajes();
+    input.value = "";
+});
 
-    carritoHTML();
-    sincronizarStorage();
-}
+function mostrarMensajes() {
+    lista.innerHTML = "";
 
-// Muestra el carrito de compras en el HTML
-function carritoHTML() {
-    limpiarHTML();
+    mensajes.forEach(mensaje => {
+        const li = document.createElement("li");
+        li.textContent = mensaje.texto;
 
-    articulosCarrito.forEach(curso => {
-        const { imagen, titulo, precio, cantidad, id } = curso;
-        const row = document.createElement('tr');
+        // Botón borrar
+        const btn = document.createElement("button");
+        btn.textContent = "Eliminar";
+        btn.style.marginLeft = "10px";
 
-        row.innerHTML = `
-            <td><img src="${imagen}" width="100"></td>
-            <td>${titulo}</td>
-            <td>${precio}</td>
-            <td>${cantidad}</td>
-            <td><a href="#" class="borrar-curso" data-id="${id}"> X </a></td>
-        `;
+        btn.addEventListener("click", () => eliminarMensaje(mensaje.id));
 
-        contenedorCarrito.appendChild(row);
+        li.appendChild(btn);
+        lista.appendChild(li);
     });
 }
 
-// Limpia los cursos del tbody
-function limpiarHTML() {
-    while (contenedorCarrito.firstChild) {
-        contenedorCarrito.removeChild(contenedorCarrito.firstChild);
-    }
+function eliminarMensaje(id) {
+    mensajes = mensajes.filter(m => m.id !== id);
+    guardar();
+    mostrarMensajes();
 }
 
-// Guarda el carrito en LocalStorage
-function sincronizarStorage() {
-    localStorage.setItem('carrito', JSON.stringify(articulosCarrito));
+function guardar() {
+    localStorage.setItem("mensajes", JSON.stringify(mensajes));
 }
