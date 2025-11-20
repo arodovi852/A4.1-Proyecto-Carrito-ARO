@@ -1,4 +1,3 @@
-
 const form = document.getElementById("form-mensaje");
 const input = document.getElementById("input-mensaje");
 const lista = document.getElementById("lista-mensajes");
@@ -10,8 +9,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (guardados) {
         mensajes = JSON.parse(guardados);
-        mostrarMensajes();
     }
+
+    mostrarMensajes();
 });
 
 form.addEventListener("submit", (e) => {
@@ -36,16 +36,23 @@ function mostrarMensajes() {
 
     mensajes.forEach(mensaje => {
         const li = document.createElement("li");
-        li.textContent = mensaje.texto;
 
-        // Botón borrar
-        const btn = document.createElement("button");
-        btn.textContent = "Eliminar";
-        btn.style.marginLeft = "10px";
+        const textoSpan = document.createElement("span");
+        textoSpan.textContent = mensaje.texto;
+        li.appendChild(textoSpan);
 
-        btn.addEventListener("click", () => eliminarMensaje(mensaje.id));
+        const btnEditar = document.createElement("button");
+        btnEditar.textContent = "Editar";
+        btnEditar.style.marginLeft = "10px";
+        btnEditar.addEventListener("click", () => editarMensaje(mensaje.id));
+        li.appendChild(btnEditar);
 
-        li.appendChild(btn);
+        const btnEliminar = document.createElement("button");
+        btnEliminar.textContent = "Eliminar";
+        btnEliminar.style.marginLeft = "10px";
+        btnEliminar.addEventListener("click", () => eliminarMensaje(mensaje.id));
+        li.appendChild(btnEliminar);
+
         lista.appendChild(li);
     });
 }
@@ -58,4 +65,35 @@ function eliminarMensaje(id) {
 
 function guardar() {
     localStorage.setItem("mensajes", JSON.stringify(mensajes));
+}
+
+
+//Mejora 1: Editar
+function editarMensaje(id) {
+    const mensaje = mensajes.find(m => m.id === id);
+    if (!mensaje) return;
+
+    const nuevoTexto = prompt("Editar mensaje:", mensaje.texto);
+    if (!nuevoTexto || nuevoTexto.trim() === "") return;
+
+    mensaje.texto = nuevoTexto.trim();
+
+    guardar();
+    mostrarMensajes();
+}
+
+//Mejora 2: Ordenar
+function ordenarMensajes() {
+    mensajes.sort((a, b) => b.id - a.id); //Más reciente a más antiguo
+    guardar();
+    mostrarMensajes();
+}
+
+//Mejora 3: Vaciar
+function vaciarMensajes() {
+    if (!confirm("¿Seguro que quieres borrar TODOS los mensajes?")) return;
+
+    mensajes = [];
+    guardar();
+    mostrarMensajes();
 }
