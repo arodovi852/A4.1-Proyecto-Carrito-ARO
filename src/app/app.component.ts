@@ -1,7 +1,10 @@
 import { Component, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-root',
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
@@ -14,7 +17,6 @@ export class AppComponent implements AfterViewInit {
   @ViewChild('content') contentRef!: ElementRef<HTMLDivElement>;
 
   ngAfterViewInit() {
-    // Modificamos el contenido y estilo dinámicamente
     if (this.contentRef) {
       this.contentRef.nativeElement.style.backgroundColor =
         this.detectBrowser() === 'Chrome' ? 'lightblue' : 'lightgreen';
