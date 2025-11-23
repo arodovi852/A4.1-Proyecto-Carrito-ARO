@@ -1,43 +1,59 @@
-# A4.1-Proyecto-Carrito-ARO
+# AROProyecto1
 
+This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.0.0.
 
-Partiendo del trabajo realizado en la entrega anterior,
-el proyecto se enfocó al formulario de mensajes, puesto que
-este tenía una funcionalidad muy básica y carecía de muchas
-funcionalidades adicionales.
+## Development server
 
----
+To start a local development server, run:
 
-## Mejora 1: Edición de mensajes introducidos
+```bash
+ng serve
+```
 
-La mejora más clara es la edición de mensajes introducidos,
-para que en vez de tener que eliminar un mensaje desde 0 se
-pueda simplemente sobreescribir uno ya existente:
+Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
 
-https://github.com/arodovi852/A4.1-Proyecto-Carrito-ARO/blob/28d7dfb8f3556c2de521b2fa7ddb68c288106127/js/app8.js#L71-L83
+## Code scaffolding
 
----
+Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
 
-## Mejora 2: Ordenación de mensajes introducidos
+```bash
+ng generate component component-name
+```
 
-Otra mejora clara es la ordenación de los mensajes, puesto
-que, a pesar de una funcionalidad muy simple, en caso de
-tener muchos mensajes podría ser conveniente tener una
-ordenación o filtrado de algún tipo para encontrar más fácilmente
-los datos introducidos.
+For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
 
-En este caso, se optó por una ordenación de mensajes básica
-de más reciente a más antiguo:
+```bash
+ng generate --help
+```
 
-https://github.com/arodovi852/A4.1-Proyecto-Carrito-ARO/blob/28d7dfb8f3556c2de521b2fa7ddb68c288106127/js/app8.js#L85-L90
+## Building
 
----
+To build the project run:
 
-## Mejora 3: Vacío de mensajes introducidos
+```bash
+ng build
+```
 
-Finalmente, para agilizar el proceso de eliminación de mensajes
-y teniendo en cuenta su persistencia al recargar la página,
-se ha añadido como funcionalidad la capacidad de eliminar
-todos los mensajes introducidos a través de la siguiente función:
+This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
 
-https://github.com/arodovi852/A4.1-Proyecto-Carrito-ARO/blob/28d7dfb8f3556c2de521b2fa7ddb68c288106127/js/app8.js#L92-L99
+## Running unit tests
+
+To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+
+```bash
+ng test
+```
+
+## Running end-to-end tests
+
+For end-to-end (e2e) testing, run:
+
+```bash
+ng e2e
+```
+
+Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+
+## Additional Resources
+
+For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
