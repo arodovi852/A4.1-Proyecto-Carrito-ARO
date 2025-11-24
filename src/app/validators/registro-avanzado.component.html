@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+
+<h2>Registro Avanzado con Validación Asincrónica</h2>
+
+<form [formGroup]="registroForm" (ngSubmit)="onSubmit()">
+
+  <label>Username:</label>
+  <input type="text" formControlName="username">
+
+  <div *ngIf="mostrarCargando('username')" class="info">
+    Verificando...
+  </div>
+
+  <div *ngIf="validarCampo('username')" class="error">
+    <div *ngIf="registroForm.get('username')?.errors?.['required']">Requerido</div>
+    <div *ngIf="registroForm.get('username')?.errors?.['minlength']">Mínimo 3 caracteres</div>
+    <div *ngIf="registroForm.get('username')?.errors?.['usernameReservado']">Username no disponible</div>
+  </div>
+
+
+  <label>Email:</label>
+  <input type="email" formControlName="email">
+
+  <div *ngIf="mostrarCargando('email')" class="info">
+    Validando disponibilidad del email...
+  </div>
+
+  <div *ngIf="validarCampo('email')" class="error">
+    <div *ngIf="registroForm.get('email')?.errors?.['required']">Requerido</div>
+    <div *ngIf="registroForm.get('email')?.errors?.['email']">Email inválido</div>
+    <div *ngIf="registroForm.get('email')?.errors?.['emailExiste']">Este email ya está registrado</div>
+  </div>
+
+
+  <label>Contraseña:</label>
+  <input type="password" formControlName="password">
+
+  <div *ngIf="validarCampo('password')" class="error">
+    <div *ngIf="registroForm.get('password')?.errors?.['required']">Requerida</div>
+    <div *ngIf="registroForm.get('password')?.errors?.['minlength']">Mínimo 8 caracteres</div>
+  </div>
+
+
+  <label>
+    <input type="checkbox" formControlName="terminos">
+    Acepto los términos y condiciones
+  </label>
+
+  <div *ngIf="validarCampo('terminos')" class="error">
+    Debes aceptar los términos
+  </div>
+
+
+  <button type="submit" [disabled]="registroForm.invalid || enviando">
+    {{ enviando ? 'Registrando...' : 'Crear Cuenta' }}
+  </button>
+
+  <div *ngIf="enviando" class="info">
+    Validando información...
+  </div>
+
+</form>
+
+
+</body>
+</html>

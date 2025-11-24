@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<h2>Formulario de Registro</h2>
+
+<form #formRegistro="ngForm" (ngSubmit)="onSubmit(formRegistro)">
+
+  <label>Nombre Completo:</label>
+  <input type="text"
+         name="nombre"
+         [(ngModel)]="usuario.nombre"
+         required
+         minlength="3"
+         #nombre="ngModel">
+
+  <div *ngIf="nombre.invalid && nombre.touched" class="error">
+    <div *ngIf="nombre.errors?.['required']">
+      El nombre es requerido
+    </div>
+    <div *ngIf="nombre.errors?.['minlength']">
+      Mínimo 3 caracteres
+    </div>
+  </div>
+
+
+  <label>Email:</label>
+  <input type="email"
+         name="email"
+         [(ngModel)]="usuario.email"
+         required
+         email
+         #email="ngModel">
+
+  <div *ngIf="email.invalid && email.touched" class="error">
+    <div *ngIf="email.errors?.['required']">El email es requerido</div>
+    <div *ngIf="email.errors?.['email']">Formato de email inválido</div>
+  </div>
+
+
+  <label>Contraseña:</label>
+  <input type="password"
+         name="password"
+         [(ngModel)]="usuario.password"
+         required
+         minlength="6"
+         #password="ngModel">
+
+  <div *ngIf="password.invalid && password.touched" class="error">
+    <div *ngIf="password.errors?.['required']">La contraseña es requerida</div>
+    <div *ngIf="password.errors?.['minlength']">Mínimo 6 caracteres</div>
+  </div>
+
+
+  <label>Confirmar Contraseña:</label>
+  <input type="password"
+         name="confirmPassword"
+         [(ngModel)]="usuario.confirmPassword"
+         required
+         #confirmPassword="ngModel">
+
+
+  <button type="submit" [disabled]="formRegistro.invalid">
+    Registrarse
+  </button>
+
+</form>
+
+<p class="success">{{ mensajeExito }}</p>
+
+<h3>Usuarios Registrados</h3>
+
+<ul>
+  <li *ngFor="let u of usuariosRegistrados">
+    {{ u.nombre }} — {{ u.email }}
+  </li>
+</ul>
+
+
+</body>
+</html>

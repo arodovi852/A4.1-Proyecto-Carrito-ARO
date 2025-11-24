@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+
+<h2>Generador de Facturas</h2>
+
+<form [formGroup]="facturaForm" (ngSubmit)="onSubmit()">
+
+  <label>Número de Factura:</label>
+  <input type="text" formControlName="numeroFactura" placeholder="FAC-123456">
+
+  <div *ngIf="facturaForm.get('numeroFactura')?.touched &&
+              facturaForm.get('numeroFactura')?.errors" class="error">
+    <div *ngIf="facturaForm.get('numeroFactura')?.errors?.['required']">
+      Requerido
+    </div>
+    <div *ngIf="facturaForm.get('numeroFactura')?.errors?.['formatoFactura']">
+      Formato incorrecto: FAC-XXXXXX (6 dígitos)
+    </div>
+  </div>
+
+  <label>Fecha:</label>
+  <input type="date" formControlName="fecha">
+
+  <label>Cliente:</label>
+  <input type="text" formControlName="cliente">
+
+  <div *ngIf="facturaForm.get('cliente')?.touched &&
+              facturaForm.get('cliente')?.errors" class="error">
+    <div *ngIf="facturaForm.get('cliente')?.errors?.['required']">
+      Requerido
+    </div>
+    <div *ngIf="facturaForm.get('cliente')?.errors?.['minlength']">
+      Mínimo 3 caracteres
+    </div>
+  </div>
+
+  <hr>
+
+  <h3>Detalles de Factura</h3>
+
+  <div formArrayName="detalles">
+
+    <div *ngFor="let detalle of detalles.controls; let i = index" [formGroupName]="i">
+
+      <label>Producto:</label>
+      <input type="text" formControlName="producto">
+
+      <label>Cantidad:</label>
+      <input type="number" formControlName="cantidad">
+
+      <label>Precio Unitario (€):</label>
+      <input type="number" step="0.01" formControlName="precioUnitario">
+
+      <label>Descuento (%):</label>
+      <input type="number" formControlName="descuento">
+
+      <button type="button" (click)="eliminarDetalle(i)">Eliminar</button>
+
+      <hr>
+    </div>
+
+  </div>
+
+  <button type="button" (click)="agregarDetalle()">
+    + Agregar Detalle
+  </button>
+
+  <h3>Subtotal: {{ calcularSubtotal() | currency:'EUR':'symbol':'1.2-2' }}</h3>
+  <h3>IVA (21%): {{ calcularIVA() | currency:'EUR':'symbol':'1.2-2' }}</h3>
+  <h3>Total: {{ calcularTotal() | currency:'EUR':'symbol':'1.2-2' }}</h3>
+
+  <button type="submit">Guardar Factura</button>
+
+</form>
+
+
+</body>
+</html>

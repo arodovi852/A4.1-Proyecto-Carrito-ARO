@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+
+<h2>Gestor de Productos</h2>
+
+<form [formGroup]="productosForm" (ngSubmit)="onSubmit()">
+
+  <!-- NOMBRE -->
+  <label>Nombre del Producto:</label>
+  <input type="text" formControlName="nombre">
+
+  <div *ngIf="nombre?.invalid && nombre?.touched" class="error">
+    <div *ngIf="nombre?.errors?.['required']">Requerido</div>
+    <div *ngIf="nombre?.errors?.['minlength']">Mínimo 3 caracteres</div>
+  </div>
+
+  <!-- DESCRIPCIÓN -->
+  <label>Descripción:</label>
+  <textarea formControlName="descripcion"></textarea>
+
+  <div *ngIf="descripcion?.invalid && descripcion?.touched" class="error">
+    <div *ngIf="descripcion?.errors?.['required']">Requerido</div>
+    <div *ngIf="descripcion?.errors?.['maxlength']">Máximo 200 caracteres</div>
+  </div>
+
+  <!-- PRECIO -->
+  <label>Precio (€):</label>
+  <input type="number" formControlName="precio" step="0.01">
+
+  <div *ngIf="precio?.invalid && precio?.touched" class="error">
+    <div *ngIf="precio?.errors?.['required']">Requerido</div>
+    <div *ngIf="precio?.errors?.['min']">Debe ser mayor a 0</div>
+  </div>
+
+  <!-- CANTIDAD -->
+  <label>Cantidad:</label>
+  <input type="number" formControlName="cantidad">
+
+  <div *ngIf="cantidad?.invalid && cantidad?.touched" class="error">
+    <div *ngIf="cantidad?.errors?.['required']">Requerido</div>
+    <div *ngIf="cantidad?.errors?.['min']">Mínimo 1</div>
+    <div *ngIf="cantidad?.errors?.['max']">Máximo 1000</div>
+  </div>
+
+  <!-- CATEGORÍA -->
+  <label>Categoría:</label>
+  <select formControlName="categoria">
+    <option value="">Seleccione una categoría</option>
+    <option>Electrónica</option>
+    <option>Ropa</option>
+    <option>Hogar</option>
+    <option>Juguetes</option>
+    <option>Deportes</option>
+  </select>
+
+  <div *ngIf="categoria?.invalid && categoria?.touched" class="error">
+    Requerido
+  </div>
+
+  <button type="submit" [disabled]="productosForm.invalid">
+    Agregar Producto
+  </button>
+
+</form>
+
+<hr>
+
+<h3>Productos Ingresados</h3>
+
+<table border="1" cellpadding="4">
+  <tr>
+    <th>ID</th>
+    <th>Nombre</th>
+    <th>Descripción</th>
+    <th>Precio</th>
+    <th>Cantidad</th>
+    <th>Acciones</th>
+  </tr>
+
+  <tr *ngFor="let p of productos">
+    <td>{{ p.id }}</td>
+    <td>{{ p.nombre }}</td>
+    <td>{{ p.descripcion }}</td>
+    <td>{{ p.precio }} €</td>
+    <td>{{ p.cantidad }}</td>
+    <td>
+      <button (click)="eliminarProducto(p.id)">Eliminar</button>
+    </td>
+  </tr>
+</table>
+
+<h3>Total del Inventario:</h3>
+<p>
+  {{ calcularTotal() | currency:'EUR':'symbol':'1.2-2' }}
+</p>
+
+
+</body>
+</html>

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+
+<h2>Perfil de Usuario Completo</h2>
+
+<form [formGroup]="perfilForm" (ngSubmit)="onSubmit()">
+
+  <fieldset>
+    <legend>Información Personal</legend>
+
+    <label>Nombre:</label>
+    <input type="text" formControlName="nombre" [formGroup]="informacionPersonal">
+    <div class="error" *ngIf="informacionPersonal.get('nombre')?.invalid && informacionPersonal.get('nombre')?.touched">
+      Nombre requerido (mínimo 2 caracteres)
+    </div>
+
+    <label>Apellido:</label>
+    <input type="text" formControlName="apellido" [formGroup]="informacionPersonal">
+    <div class="error" *ngIf="informacionPersonal.get('apellido')?.invalid && informacionPersonal.get('apellido')?.touched">
+      Apellido requerido (mínimo 2 caracteres)
+    </div>
+
+    <label>Fecha de Nacimiento:</label>
+    <input type="date" formControlName="fechaNacimiento" [formGroup]="informacionPersonal">
+    <div>
+      Edad: {{ calcularEdad() }} años
+    </div>
+
+    <label>Teléfono:</label>
+    <input type="text" formControlName="telefono" [formGroup]="informacionPersonal">
+    <div class="error" *ngIf="informacionPersonal.get('telefono')?.invalid && informacionPersonal.get('telefono')?.touched">
+      Teléfono inválido (mínimo 9 dígitos)
+    </div>
+
+  </fieldset>
+
+  <fieldset>
+    <legend>Direcciones ({{ direcciones.length }})</legend>
+
+    <div *ngFor="let dir of direcciones.controls; let i = index" [formGroup]="dir">
+      <h3>Dirección {{ i + 1 }}</h3>
+
+      <label>Tipo:</label>
+      <select formControlName="tipo">
+        <option *ngFor="let t of tiposDireccion" [value]="t">{{ t }}</option>
+      </select>
+
+      <button type="button" (click)="eliminarDireccion(i)">Eliminar Dirección</button>
+
+      <label>Calle:</label>
+      <input type="text" formControlName="calle">
+      <div class="error" *ngIf="dir.get('calle')?.invalid && dir.get('calle')?.touched">
+        Mínimo 5 caracteres
+      </div>
+
+      <label>Ciudad:</label>
+      <input type="text" formControlName="ciudad">
+
+      <label>Código Postal:</label>
+      <input type="text" formControlName="codigoPostal">
+      <div class="error" *ngIf="dir.get('codigoPostal')?.invalid && dir.get('codigoPostal')?.touched">
+        Formato: 5 dígitos
+      </div>
+
+      <label>País:</label>
+      <input type="text" formControlName="pais">
+    </div>
+
+    <button type="button" (click)="agregarDireccion()">+ Agregar Otra Dirección</button>
+  </fieldset>
+
+  <h3>Resumen del Perfil</h3>
+  <p>{{ generarResumen() }}</p>
+
+  <button type="submit" [disabled]="perfilForm.invalid">Guardar Perfil</button>
+
+</form>
+
+
+</body>
+</html>
